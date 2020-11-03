@@ -12,6 +12,8 @@ using namespace std;
 void run_main( int x ,int y, int run_x , int run_y , bool validInput ,char run );// 地圖函式 
 void bag_main();// 背包函式
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////主遊戲函式 
+
 int main()// 開始 執行程式 
 {
 	
@@ -31,11 +33,10 @@ int main()// 開始 執行程式
 	
 	//以下開始進入遊戲程序 
 	
-//	cout << "歡迎遊玩 \"野球拳\" 小遊戲" << endl << endl ; // 歡迎 與 規則介紹 
-//	cout << "規則:" << endl ;
-//	cout << "玩家與電腦 可穿1~5件衣服" << endl ;
-//	cout << "選擇好衣服數後 遊戲即開始" << endl ;
-//	cout << "猜拳 敗者脫一件 勝者不變" << endl << endl ;
+	cout << "歡迎遊玩 \"mini RPGame\" 小遊戲" << endl << endl ; // 歡迎 與 基本操作介紹 
+	cout << "      基本操作:" << endl ;
+	cout << "      輸入 W A S D 控制方向  |  輸入 E 看背包  |  輸入 Q 結束遊戲" << endl;
+	cout << "      (可一次輸入欲走之步數) (忽視大小寫)" << endl << endl ; 
 	
 	cout << "請輸入 -1 開始遊戲" << endl ;
 	
@@ -57,9 +58,6 @@ int main()// 開始 執行程式
 	
 	while (validInput)
 	{
-		
-		cout << "請輸入 W A S D 控制方向 輸入 E 看背包 輸入 Q 結束遊戲 " << endl ;
-		cout << "(可一次輸入欲走之步數) (忽視大小寫)" << endl ; 
 		
 		cin >> run ;//玩家輸入操作 
 		
@@ -199,14 +197,12 @@ int main()// 開始 執行程式
 				
 			case 'e'  : //開啟背包 
 				cout << endl ;
-				cout << "                                        包包" << endl ;
 				bag_main();
 				cout << endl << endl ;		
 				break ;
 				
 			case 'E'  : //開啟背包
 				cout << endl ;	
-				cout << "                                        包包" << endl ;
 				bag_main();
 				cout << endl << endl ;
 				break ;
@@ -223,11 +219,13 @@ int main()// 開始 執行程式
 	}
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////地圖函式
+
 void run_main( int x ,int y, int run_x , int run_y , bool validInput ,char run ) // 地圖函式
 {
-	
 	if (validInput)
 	{
+		cout << "                         村莊地圖" << endl << endl ;
 		for(; y<=11 ; y++ )
 		{
 			for(; x<=11 ; x++ )
@@ -254,9 +252,14 @@ void run_main( int x ,int y, int run_x , int run_y , bool validInput ,char run )
 	} 
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////背包函式
+
 void bag_main()// 背包函式
 {
 	int take;
+	
+	cout << "                      包 包" << endl << endl ;
+	
 	for(int z=1; z<=9 ; z++ )
 	{
 		cout << " 空" ; 
