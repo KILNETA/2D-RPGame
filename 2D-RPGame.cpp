@@ -212,8 +212,8 @@ int main()// 開始 執行程式
 				break ;
 				
 			default: 
-				cout << "-----error-----請不要亂出-----error-----" << endl << endl ;
-				validInput = false ; // 出拳 不合規
+				cout << "                                        -----error-----請不要亂出-----error-----" << endl << endl ;
+				validInput = false ; // 輸入 不合規
 		}
 	}
 	while( end != -1 ) //關閉視窗 
@@ -256,11 +256,66 @@ void run_main( int x ,int y, int run_x , int run_y , bool validInput ,char run )
 
 void bag_main()// 背包函式
 {
-	for(int z=1; z<=11 ; z++ )
+	int take;
+	for(int z=1; z<=9 ; z++ )
 	{
 		cout << " 空" ; 
 	} 
 	cout << endl ;
+
+	cout << " 1  2  3  4  5  6  7  8  9" ; 
+		
+	cout << endl ;
+	
+	cout << "                                        輸入編號拿取物品 -1關閉包包" << endl ;
+	
+	cin >> take ;
+	
+	switch(take) // 判斷玩家輸入的結果 
+		{ 
+			case 1 : 
+				cout << "                                        拿取 1" << endl ; 
+				break ;
+				 
+			case 2 : 
+				cout << "                                        拿取 2" << endl ; 
+				break ;
+			
+			case 3 : 
+				cout << "                                        拿取 3" << endl ; 
+				break ;
+			
+			case 4 : 
+				cout << "                                        拿取 4" << endl ; 
+				break ;
+				
+			case 5 : 
+				cout << "                                        拿取 5" << endl ; 
+				break ;
+				 
+			case 6 : 
+				cout << "                                        拿取 6" << endl ; 
+				break ;
+			
+			case 7 : 
+				cout << "                                        拿取 7" << endl ; 
+				break ;
+			
+			case 8 : 
+				cout << "                                        拿取 8" << endl ; 
+				break ;
+				
+			case 9 : 
+				cout << "                                        拿取 9" << endl ; 
+				break ;
+				
+			case 0 : 
+				cout << "                                        關閉背包" << endl ; 
+				break ;
+			
+			default: 
+				cout << "                                        -----error-----請不要亂出-----error-----" << endl << endl ;
+		}
 }
 
 
