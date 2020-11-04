@@ -5,41 +5,54 @@
 #include <ctime>
 #include <cstdlib>  
 #include <conio.h>
+#include <stdio.h>
 
 // 簡化程式碼 
 
 using namespace std;
 
-void map_main( int run_x , int run_y , bool validInput );// 地圖函式 
-void bag_main( int run_x , int run_y , bool validInput );// 背包函式
+typedef struct R2{
+	int A = 0;
+	int B = 0;
+};
 
-int W_run( int run_x , int run_y );// 向上走函式
-int S_run( int run_x , int run_y );// 向下走函式
-int A_run( int run_x , int run_y );// 向左走函式
-int D_run( int run_x , int run_y );// 向右走函式
 
-int one_bag   ();
-int two_bag   ();
-int three_bag ();
-int four_bag  ();
-int five_bag  ();
-int six_bag   ();
-int seven_bag ();
-int eight_bag ();
-int nine_bag  ();
+void map_main( int run_x , int run_y );// 地圖函式 
+void bag_main();// 背包函式
+void help_main();// 操作提示清單函式
+
+R2 W_run( int run_x , int run_y , int task_yes);// 向上走函式
+R2 S_run( int run_x , int run_y , int task_yes);// 向下走函式
+R2 A_run( int run_x , int run_y , int task_yes);// 向左走函式
+R2 D_run( int run_x , int run_y , int task_yes);// 向右走函式
+
+/////////////////////////////////////////////////////////// npc函式
+int npc_aka( int run_x , int run_y , int task_yes );
+int npc_businessman(  );
+int npc_farmer(  );
+int npc_well(  );
+
+/////////////////////////////////////////////////////////// 任務函式
+int task_npc_aka_mussel( int B1 , int B2 , int B3 , int B4 , int B5 , int B6 , int B7 , int B8 , int B9 );
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////主遊戲函式 
 
-int main()// 開始 執行程式 
+int main()// 開始 執行程式  
 {
 	
 	// 設定初始值 與 宣告變數名稱 
+	
+	R2 x;
 	
 	int run_x=6 , run_y=6 ;
 	
 	int start_input , end=0 ; // 控制 開始 
 	
 	int position , button ; // 
+	
+	int B1=0 , B2=0 , B3=0 , B4=0 , B5=0 , B6=0 , B7=0 , B8=0 , B9=0 ;
+	
+	int task_yes = 0 ;
 	
 	bool validInput ; // bool 控制 是 與 否 
 	
@@ -49,88 +62,154 @@ int main()// 開始 執行程式
 	
 	cout << "歡迎遊玩 \"mini RPGame\" 小遊戲" << endl << endl ; // 歡迎 與 基本操作介紹 
 	cout << "      基本操作:" << endl ;
-	cout << "      輸入 W A S D 控制方向  |  輸入 E 看背包  |  輸入 Q 結束遊戲" << endl;
-	cout << "      (可一次輸入欲走之步數) (忽視大小寫)" << endl << endl ; 
+	cout << "      W A S D 控制方向  |  E 開背包 " << endl << "      Esc 結束遊戲  |  ? 操作提示" << endl << endl;
 	
 	cout << " Enter 開始遊戲" << endl ;
 	
-	while (1)//判斷 遊戲開始
+	while (1)// 讀取玩家按鍵  // 控制遊戲開始
 		{
-            start_input = getch();//使用_getch()函??取按下的?值
+            start_input = getch();// 讀取玩家按鍵 
             if (start_input == 13)
 			{
 				break; 
 			}
-    	}//判斷 遊戲開始
+    	}// 讀取玩家按鍵 
 	
 	system("cls"); // 清屏
 		
 	validInput = true ; //輸入正確 預設執行 
 	
 	cout << endl << endl ;
-	map_main( run_x , run_y , validInput ); //第一次顯示地圖 
+	map_main( run_x , run_y ); //第一次顯示地圖 
 	
-	while (validInput)
+	while (validInput)// 判斷 遊戲操作 是否要結束 
 	{
+		task_yes = 0 ;
 		button = 0 ;
-		while (1)
+		
+		while (1) // 讀取玩家按鍵 // 控制操作 
 		{
             button = getch();// 讀取玩家按鍵 
             if (button != 0)
 			{
 				break; 
 			}
-    	}
+    	} // 讀取玩家按鍵 
 		
 		switch(button) // 判斷玩家按鍵輸入的結果 
 		{ 
-			case 119 : 
+			case 119 : //按 W 
+			{ 
 				run_y-- ;// 向上走
-				run_y = W_run(run_x , run_y );// 回傳 向上走函式值run_y
-				map_main( run_x , run_y , validInput );//運行 地圖函式
-				break ;
-						 
-			case 115 :
-				run_y++ ;// 向下走
-				run_y = S_run(run_x , run_y );// 回傳 向上走函式 值run_y
-				map_main( run_x , run_y , validInput );//運行 地圖函式
-				break ;
-						 
-			case 97:
-				run_x-- ;// 向左走
-				run_x = A_run(run_x , run_y);// 回傳 向上走函式 值run_x 
-				map_main( run_x , run_y , validInput );//運行 地圖函式
-				break ;
 				
-			case 100 :
-				run_x++ ;// 向右走
-				run_x = D_run(run_x , run_y );// 回傳 向上走函式 值run_x 
-				map_main( run_x , run_y , validInput );//運行 地圖函式
+				x = W_run(run_x , run_y , task_yes ) ;// 回傳 向上走函式值run_y  任務值 task_yes
+				task_yes = x.A ;
+				run_y = x.B ;
+				
+				switch(task_yes) // 判斷有無 任務 
+				{ 
+					case 1 : 
+						B1 = task_npc_aka_mussel( B1 , B2 , B3 , B4 , B5 , B6 , B7 , B8 , B9 ) ;
+					break ;
+				}
+				map_main( run_x , run_y );//運行 地圖函式
 				break ;
+			} 
+						 
+			case 115 : //按 S 
+			{ 
+				run_y++ ;// 向下走
+				
+				x = S_run(run_x , run_y , task_yes ) ;// 回傳 向下 走函式值run_y  任務值 task_yes
+				task_yes = x.A ;
+				run_y = x.B ;
+				
+				switch(task_yes) // 判斷有無 任務 
+				{ 
+					case 1 : 
+						B1 = task_npc_aka_mussel( B1 , B2 , B3 , B4 , B5 , B6 , B7 , B8 , B9 ) ;
+					break ;
+				}
+				map_main( run_x , run_y );//運行 地圖函式
+				break ;
+			} 
+						 
+			case 97:   //按 A 
+			{ 
+				run_x-- ;// 向左走
+				x = A_run(run_x , run_y , task_yes ) ;// 回傳 向左 走函式值run_x  任務值 task_yes 
+				task_yes = x.A ;
+				run_x = x.B ;
+				switch(task_yes) // 判斷有無 任務 
+				{ 
+					case 1 : 
+						B1 = task_npc_aka_mussel( B1 , B2 , B3 , B4 , B5 , B6 , B7 , B8 , B9 ) ;
+					break ;
+				}
+				map_main( run_x , run_y );//運行 地圖函式
+				break ;
+			} 
+				
+			case 100 : //按 D 
+			{
+				run_x++ ;// 向右走
+				x = D_run(run_x , run_y , task_yes ) ;// 回傳 向右 走函式值run_x 任務值 task_yes 
+				task_yes = x.A ;
+				run_x = x.B ;
+				switch(task_yes) // 判斷有無 任務 
+				{ 
+					case 1 : 
+						B1 = task_npc_aka_mussel( B1 , B2 , B3 , B4 , B5 , B6 , B7 , B8 , B9 ) ;
+					break ;
+				}
+				map_main( run_x , run_y );//運行 地圖函式
+				break ;
+			}
 					
 			case 27  : //玩家結束遊戲 
+			{
 				cout << endl ;	
 				cout << "                                        下次再來玩喔 ㄅㄅ" << endl << endl ;
 				validInput = false ;
 				break ;
+			}
 				
 			case 101  : //開啟背包 
+			{
 				system("cls");
 				cout << endl ;
 				cout << "                                        開起背包" << endl ; 
-				bag_main( run_x , run_y , validInput );	//運行 包包函式 
+				bag_main(  );	//運行 包包函式 
+				map_main( run_x , run_y ); //運行 地圖函式 
 				break ;
-				
-			default:
-				break ; 
+			} 
 			
+			case 63  : //開啟操作提示清單 
+			{
+				system("cls");
+				cout << endl ;
+				cout << "                                        開起 操作提示清單" << endl ; 
+				help_main();	//運行 操作提示清單函式 
+				map_main( run_x , run_y );//運行 地圖函式
+				break ;
+			} 
+				
+			default: //無效鍵 
+			{ 
+				break ;
+			} 
 		}
 	}
-	while( end != -1 ) //關閉視窗 
-	{
-			cout << "請輸入 (-1 關閉視窗)" << endl ;
-			cin >> end ;
-	}
+	cout << "再按一次 Esc 關閉介面" << endl ; 
+	while (1) // 讀取玩家按鍵 // Esc 關閉介面
+	{ 
+		int END_button=0 ;
+        END_button = getch();// 讀取玩家按鍵 
+        if (END_button == 27)
+		{
+			break; 
+		}
+    } // 讀取玩家按鍵 
 }
 
 
@@ -139,67 +218,83 @@ int main()// 開始 執行程式
 
 
 
-void map_main( int run_x , int run_y , bool validInput ) // 地圖函式
+void map_main( int run_x , int run_y ) // 地圖函式
 {
 	int x=1 , y=1 ;
-	
-	if (validInput)
+
+	cout << "                         村莊地圖" << endl << endl ;
+	for(; y<=11 ; y++ )
 	{
-		cout << "                         村莊地圖" << endl << endl ;
-		for(; y<=11 ; y++ )
+		for(; x<=11 ; x++ )
 		{
-			for(; x<=11 ; x++ )
+			if(x == 3 && y == 4) //顯示 農民 
 			{
-				if(x == 3 && y == 4) //顯示 農民 
-				{
-					cout << " 農" ;
-				}
-				else if(x == 8 && y == 6) //顯示 商人 
-				{
-					cout << " 商" ;
-				}
-				else if(x == 3 && y == 9) //顯示 水井 
-				{
-					cout << " 井" ;
-				}
-				else if(x == 6 && y == 2) //顯示 暴徒 
-				{
-					cout << "aka" ;
-				}
-				else if(x == run_x && y == run_y) //顯示 玩家 
-				{
-					cout << " 我" ;
-				}
-				else if(x <= 5 && y >= 6) //顯示 農田 
-				{
-					cout << " 艸" ;
-				}
-				else                      //顯示 道路 
-				{
-					cout << " 口" ;
-				}
+				cout << " 農" ;
 			}
-			x=1;
-			cout << endl ;
+			else if(x == 8 && y == 6) //顯示 商人 
+			{
+				cout << " 商" ;
+			}
+			else if(x == 3 && y == 9) //顯示 水井 
+			{
+				cout << " 井" ;
+			}
+			else if(x == 6 && y == 2) //顯示 暴徒 
+			{
+				cout << "aka" ;
+			}
+			else if(x == run_x && y == run_y) //顯示 玩家 
+			{
+				cout << " 我" ;
+			}
+			else if(x <= 5 && y >= 6) //顯示 農田 
+			{
+				cout << " 艸" ;
+			}
+			else                      //顯示 道路 
+			{
+				cout << " 口" ;
+			}
 		}
-	} 
+		x=1;
+		cout << endl ;
+	}
 	cout << endl << endl ;
 }
 
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 操作提示清單函式
+
+
+
+void help_main()// 操作提示清單函式 
+{
+	cout << "      基本操作:" << endl ;
+	cout << "      W A S D 控制方向  |  E 開背包 " << endl << "      Esc 結束遊戲  |  ? 操作提示" << endl << endl ;
+	cout << "      Esc 關閉提示" << endl ;
+	int help_Esc ;
+	
+	while (help_Esc != 27)// 讀取玩家按鍵 // 控制 離開操作提示清單 操作
+		{
+            help_Esc = getch();// 讀取玩家按鍵 
+    	}// 讀取玩家按鍵
+    system("cls"); // 清屏
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 背包函式
 
 
 
-void bag_main( int run_x , int run_y , bool validInput )// 背包函式
+void bag_main()// 背包函式
 {
 	int take;
 	bool validInput_bag ;
 	
 	cout << "                      包 包" << endl << endl ;
 	
-	for(int z=1; z<=9 ; z++ )
+	for(int z=1; z<=9 ; z++ ) //繪製包包 
 	{
 		cout << " 空" ; 
 	} 
@@ -210,18 +305,18 @@ void bag_main( int run_x , int run_y , bool validInput )// 背包函式
 	
 	validInput_bag = true ;
 	
-	while(validInput_bag)
+	while(validInput_bag)  // 判斷 包包操作 是否要結束
 	{
 		
 		take = 0 ;
-		while (1)
+		while (1)// 讀取玩家按鍵 // 控制 包包 操作
 		{
             take = getch();// 讀取玩家按鍵 
             if (take != 0)
 			{
 				break; 
 			}
-    	}
+    	}// 讀取玩家按鍵  
     	
 		switch(take) // 判斷玩家按鍵輸入的結果 
 		{ 
@@ -282,7 +377,6 @@ void bag_main( int run_x , int run_y , bool validInput )// 背包函式
 	_sleep(750); // 停留0.75秒 
 	system("cls"); // 清屏 
 	cout << endl << endl ;
-	map_main( run_x , run_y , validInput ); //運行 地圖函式 
 }
 
 
@@ -291,36 +385,39 @@ void bag_main( int run_x , int run_y , bool validInput )// 背包函式
 
 
 
-int W_run(int run_x , int run_y )
+R2 W_run(int run_x , int run_y , int task_yes)
 { 
+	R2 output ;
+	
 	system("cls"); // 清屏
-	if(run_y < 1 )
+	if(run_y < 1 ) // 遇到邊界
 	{
 		run_y++ ;
-		cout << "走不過去了 " ;
+		cout << "走不過去了 " << endl ;
 	}
-	if( run_x == 3 && run_y == 4 )
+	if( run_x == 3 && run_y == 4 ) //遇到 農民
 	{
 		run_y++ ;
-		cout << "農民 : 他的手可以穿過我的巴巴 到底是為什麼 " ;
+		cout << "農民 : 他的手可以穿過我的巴巴 到底是為什麼 " << endl ;
 	}
-	if( run_x == 8 && run_y == 6 )
+	if( run_x == 8 && run_y == 6 ) //遇到 商人
 	{
 		run_y++ ;
 		cout << "商人 : 來看看新貨 " ;
 	}
-	if( run_x == 3 && run_y == 9 )
+	if( run_x == 3 && run_y == 9 ) //遇到 水井
 	{
 		run_y++ ;
-		cout << "os : 又深又黑 有點恐怖 " ;
+		cout << "os : 又深又黑 有點恐怖 " << endl ;
 	}
-	if( run_x == 6 && run_y == 2 )
-	{
+	if( run_x == 6 && run_y == 2 ) //遇到 aka
+	{ 
 		run_y++ ;
-		cout << "台北爆徒 : 阿我就怕被罵嘛" ;
+		output.A = npc_aka( run_x , run_y , task_yes );
 	}
 	cout << endl << endl ;
-	return run_y ;
+	output.B = run_y  ;
+	return output ;
 }
 		
 
@@ -329,36 +426,39 @@ int W_run(int run_x , int run_y )
 
 
 			 
-int S_run(int run_x , int run_y )
+R2 S_run(int run_x , int run_y , int task_yes)
 { 
+	R2 output ;
+
 	system("cls"); // 清屏
-	if(run_y > 11 )
+	if(run_y > 11 ) // 遇到邊界
 	{
 		run_y-- ;
-		cout << "走不過去了 " ;
+		cout << "走不過去了 " << endl ;
 	}
-	if( run_x == 3 && run_y == 4 )
+	if( run_x == 3 && run_y == 4 ) //遇到 農民
 	{
 		run_y-- ;
-		cout << "農民 : 他的手可以穿過我的巴巴 到底是為什麼 " ;
+		cout << "農民 : 他的手可以穿過我的巴巴 到底是為什麼 " << endl ;
 	}
-	if( run_x == 8 && run_y == 6 )
+	if( run_x == 8 && run_y == 6 ) //遇到 商人
 	{
 		run_y-- ;
-		cout << "商人 : 來看看新貨 " ;
+		cout << "商人 : 來看看新貨 " << endl ;
 	}
-	if( run_x == 3 && run_y == 9 )
+	if( run_x == 3 && run_y == 9 ) //遇到 水井
 	{
 		run_y-- ;
-		cout << "os : 又深又黑 有點恐怖 " ;
+		cout << "os : 又深又黑 有點恐怖 " << endl ;
 	}
-	if( run_x == 6 && run_y == 2 )
+	if( run_x == 6 && run_y == 2 ) //遇到 aka
 	{
 		run_y-- ;
-		cout << "台北爆徒 : 阿我就怕被罵嘛" ;
+		output.A = npc_aka( run_x , run_y , task_yes );
 	}
 	cout << endl << endl ;
-	return run_y ;
+	output.B = run_y  ;
+	return output ;
 }
 		
 
@@ -367,36 +467,39 @@ int S_run(int run_x , int run_y )
 
 
 				 
-int A_run(int run_x , int run_y )
+R2 A_run(int run_x , int run_y , int task_yes)
 { 
+	R2 output ;
+
 	system("cls"); // 清屏
-	if(run_x < 1 )
+	if(run_x < 1 ) // 遇到邊界
 	{
 		run_x++ ;
-		cout << "走不過去了 " ;
+		cout << "走不過去了 " << endl ;
 	}
-	if( run_x == 3 && run_y == 4 )
+	if( run_x == 3 && run_y == 4 ) //遇到 農民
 	{
 		run_x++ ;
-		cout << "農民 : 他的手可以穿過我的巴巴 到底是為什麼 " ;
+		cout << "農民 : 他的手可以穿過我的巴巴 到底是為什麼 " << endl ;
 	}
-	if( run_x == 8 && run_y == 6 )
+	if( run_x == 8 && run_y == 6 ) //遇到 商人
 	{
 		run_x++ ;
-		cout << "商人 : 來看看新貨 " ;
+		cout << "商人 : 來看看新貨 " << endl ;
 	}
-	if( run_x == 3 && run_y == 9 )
+	if( run_x == 3 && run_y == 9 ) //遇到 水井
 	{
 		run_x++ ;
-		cout << "os : 又深又黑 有點恐怖 " ;
+		cout << "os : 又深又黑 有點恐怖 " << endl ;
 	}
-	if( run_x == 6 && run_y == 2 )
+	if( run_x == 6 && run_y == 2 ) //遇到 aka 
 	{
 		run_x++ ;
-		cout << "台北爆徒 : 阿我就怕被罵嘛" ;
+		output.A = npc_aka( run_x , run_y , task_yes );
 	}
 	cout << endl << endl ;
-	return run_x ;
+	output.B = run_x  ;
+	return output ;
 }
 			
 
@@ -405,36 +508,39 @@ int A_run(int run_x , int run_y )
 
 
 	
-int D_run(int run_x , int run_y )
+R2 D_run(int run_x , int run_y , int task_yes )
 { 
+	R2 output ;
+	
 	system("cls"); // 清屏
-	if(run_x > 11 )
+	if(run_x > 11 ) // 遇到邊界 
 	{
 		run_x-- ;
-		cout << "走不過去了 " ;
+		cout << "走不過去了 " << endl ;
 	}
-	if( run_x == 3 && run_y == 4 )
+	if( run_x == 3 && run_y == 4 ) //遇到 農民 
 	{
 		run_x-- ;
-		cout << "農民 : 他的手可以穿過我的巴巴 到底是為什麼 " ;
+		cout << "農民 : 他的手可以穿過我的巴巴 到底是為什麼 " << endl ;
 	}
-	if( run_x == 8 && run_y == 6 )
+	if( run_x == 8 && run_y == 6 ) //遇到 商人 
 	{
 		run_x-- ;
-		cout << "商人 : 來看看新貨 " ;
+		cout << "商人 : 來看看新貨 " << endl ;
 	}
-	if( run_x == 3 && run_y == 9 )
+	if( run_x == 3 && run_y == 9 ) //遇到 水井 
 	{
 		run_x-- ;
-		cout << "os : 又深又黑 有點恐怖 " ;
+		cout << "os : 又深又黑 有點恐怖 " << endl ;
 	}
-	if( run_x == 6 && run_y == 2 )
+	if( run_x == 6 && run_y == 2 ) //遇到 aka 
 	{
 		run_x-- ;
-		cout << "台北爆徒 : 阿我就怕被罵嘛" ;
+		output.A = npc_aka( run_x , run_y , task_yes );
 	}
 	cout << endl << endl ;
-	return run_x ;
+	output.B = run_x  ;
+	return output ;
 }
 			
 
@@ -443,54 +549,136 @@ int D_run(int run_x , int run_y )
 
 
 
-int one_bag   ()
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// npc函式 
+
+
+int npc_aka( int run_x , int run_y , int task_yes ) // 暴徒npc函式
+{
+	int talk ;
+	
+	bool validInput_npc_aka = true ;
+	
+	while(validInput_npc_aka)
+	{
+		talk = 0 ;
+		while (1)
+		{
+			cout << "台北爆徒 : 浪漫Duke" << endl << endl ;
+			cout << " 1. 沒帶記憶卡 不早說。" << endl ; 
+			cout << " 2. 抽煙?。" << endl ;
+			cout << " 3. 懂海 海就會幫你。" << endl ;
+				
+            talk = getch();// 讀取玩家按鍵 
+            if (talk != 0)
+			{
+				system("cls") ;
+				break; 
+			}
+    	}
+    	
+		switch(talk) // 判斷玩家按鍵輸入的結果 
+		{ 
+			case 49 : 
+				cout << "玩家 : 為什麼你沒帶記憶卡 不早說。" << endl << endl ; 
+				cout << "台北爆徒 : 阿我就怕被罵嘛。" << endl ; 
+				validInput_npc_aka = false ;
+				break ;
+				 
+			case 50 : 
+				cout << "玩家 : 抽煙 ? " << endl << endl ; 
+				cout << "台北爆徒 : 抽煙 BAD ! ! ! " << endl ; 
+				validInput_npc_aka = false ;
+				break ;
+			
+			case 51 : 
+				cout << "玩家 : 懂海 海就會幫你。 " << endl << endl ; 
+				cout << "台北爆徒 : 我就喜歡這種直率的人" << endl << endl ;
+				cout << "獲得  \"象蚌\"  " << endl ;
+				validInput_npc_aka = false ;
+				task_yes = 1 ;
+				return task_yes ;
+				break ;
+			
+			default:
+				break ;
+		} 
+	} 
+} // 暴徒npc函式
+
+
+
+int npc_businessman(  ) // 商人npc 函式
 {
 	
+}
+ 
+
+
+int npc_farmer(  ) // 農夫npc 函式
+{
+
 } 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 1 
-int two_bag   ()
+
+
+
+int npc_well(  ) // 水井物件 函式
 {
-	
+
 } 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 2 
-int three_bag ()
-{
-	
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 3 
-int four_bag  ()
-{
-	
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 4 
-int five_bag  ()
-{
-	
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 5 
-int six_bag   ()
-{
-	
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 6 
-int seven_bag ()
-{
-	
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 7 
-int eight_bag ()
-{
-	
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 8 
-int nine_bag  () 
-{
-	
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 9 
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 任務函式 
 
+
+int task_npc_aka_mussel( int B1 , int B2 , int B3 , int B4 , int B5 , int B6 , int B7 , int B8 , int B9 ) // 偵測 象蚌要放那 
+{
+	if( B1==0 )
+	{
+		B1='蚌' ;
+		return B1 ;
+	}
+	else if( B2==0 )
+	{
+		B2='蚌' ;
+		return B2 ;
+	}
+	else if( B3==0 )
+	{
+		B3='蚌' ;
+		return B3 ;
+	}
+	else if( B4==0 )
+	{
+		B4='蚌' ;
+		return B4 ;
+	}
+	else if( B5==0 )
+	{
+		B5='蚌' ;
+		return B5 ;
+	}
+	else if( B6==0 )
+	{
+		B6='蚌' ;
+		return B6 ;
+	}
+	else if( B7==0 )
+	{
+		B7='蚌' ;
+		return B7 ;
+	}
+	else if( B8==0 )
+	{
+		B8='蚌' ;
+		return B8 ;
+	}
+	else if( B9==0 )
+	{
+		B9='蚌' ;
+		return B9 ;
+	}
+	cout << B1 << endl ;
+}
 
 
 
