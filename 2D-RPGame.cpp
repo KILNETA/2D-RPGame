@@ -18,8 +18,9 @@ typedef struct R2{
 
 
 void map_main( int run_x , int run_y );// 地圖函式 
-void bag_main();// 背包函式
-void help_main();// 操作提示清單函式
+void bag_main(  );// 背包函式
+void help_main(  );// 操作提示清單函式
+void situation_main( char* name_out );// 自我狀況清單函式
 
 R2 W_run( int run_x , int run_y , int task_yes);// 向上走函式
 R2 S_run( int run_x , int run_y , int task_yes);// 向下走函式
@@ -44,6 +45,11 @@ int main()// 開始 執行程式
 	
 	R2 x;
 	
+	char name[55] ;
+	
+	char* name_out ;
+
+	
 	int run_x=6 , run_y=6 ;
 	
 	int start_input , end=0 ; // 控制 開始 
@@ -63,6 +69,10 @@ int main()// 開始 執行程式
 	cout << "歡迎遊玩 \"mini RPGame\" 小遊戲" << endl << endl ; // 歡迎 與 基本操作介紹 
 	cout << "      基本操作:" << endl ;
 	cout << "      W A S D 控制方向  |  E 開背包 " << endl << "      Esc 結束遊戲  |  ? 操作提示" << endl << endl;
+	
+	cout << "請輸入你的角色名字" << endl << endl ;
+	gets(name);
+	name_out = name;
 	
 	cout << " Enter 開始遊戲" << endl ;
 	
@@ -194,6 +204,16 @@ int main()// 開始 執行程式
 				break ;
 			} 
 				
+			case 99  : //開啟自我狀況清單
+			{
+				system("cls");
+				cout << endl ;
+				cout << "                                        開起 自我狀況清單" << endl ; 
+				situation_main( name_out );	//運行 自我狀況清單函式 
+				map_main( run_x , run_y );//運行 地圖函式
+				break ;
+			} 
+				
 			default: //無效鍵 
 			{ 
 				break ;
@@ -281,6 +301,31 @@ void help_main()// 操作提示清單函式
     	}// 讀取玩家按鍵
     system("cls"); // 清屏
 }
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 背包函式
+
+
+
+void situation_main( char* name_out)// 自我狀況清單函式
+{
+	cout << "      角色狀況: " << endl << endl ;
+	cout << "      角色名稱: " << name_out << endl ;
+	/*cout << "      手部: " <<  << "      裝備: " << / << endl ;
+	cout << "      金錢: " <<  ;
+	cout << "      稱號: " << / << endl << endl ; */
+	
+	cout << "      Esc 關閉清單" << endl ;
+	int situation_Esc ;
+	
+	while (situation_Esc != 27)// 讀取玩家按鍵 // 控制 離開操作提示清單 操作
+		{
+            situation_Esc = getch();// 讀取玩家按鍵 
+    	}// 讀取玩家按鍵
+    system("cls"); // 清屏
+} 
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 背包函式
