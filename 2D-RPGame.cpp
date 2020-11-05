@@ -11,16 +11,17 @@
 
 using namespace std;
 
-typedef struct R2{
+typedef struct R2
+{
 	int A = 0;
 	int B = 0;
 };
 
 
 void map_main( int run_x , int run_y );// 地圖函式 
-void bag_main(  );// 背包函式
+int bag_main( int B1 , int B2 , int B3 , int B4 , int B5 , int B6 , int B7 , int B8 , int B9 );// 背包函式
 void help_main(  );// 操作提示清單函式
-void situation_main( char* name_out );// 自我狀況清單函式
+void situation_main( char* name_out , int blood );// 自我狀況清單函式
 
 R2 W_run( int run_x , int run_y , int task_yes);// 向上走函式
 R2 S_run( int run_x , int run_y , int task_yes);// 向下走函式
@@ -48,7 +49,9 @@ int main()// 開始 執行程式
 	char name[55] ;
 	
 	char* name_out ;
-
+	
+	
+	int blood = 100 ;
 	
 	int run_x=6 , run_y=6 ;
 	
@@ -189,7 +192,7 @@ int main()// 開始 執行程式
 				system("cls");
 				cout << endl ;
 				cout << "                                        開起背包" << endl ; 
-				bag_main(  );	//運行 包包函式 
+				bag_main( B1 , B2 , B3 , B4 , B5 , B6 , B7 , B8 , B9 );	//運行 包包函式 
 				map_main( run_x , run_y ); //運行 地圖函式 
 				break ;
 			} 
@@ -209,7 +212,7 @@ int main()// 開始 執行程式
 				system("cls");
 				cout << endl ;
 				cout << "                                        開起 自我狀況清單" << endl ; 
-				situation_main( name_out );	//運行 自我狀況清單函式 
+				situation_main( name_out , blood );	//運行 自我狀況清單函式 
 				map_main( run_x , run_y );//運行 地圖函式
 				break ;
 			} 
@@ -308,10 +311,11 @@ void help_main()// 操作提示清單函式
 
 
 
-void situation_main( char* name_out)// 自我狀況清單函式
+void situation_main( char* name_out , int blood )// 自我狀況清單函式
 {
 	cout << "      角色狀況: " << endl << endl ;
 	cout << "      角色名稱: " << name_out << endl ;
+	cout << "      角色血量: " << blood << endl ;
 	/*cout << "      手部: " <<  << "      裝備: " << / << endl ;
 	cout << "      金錢: " <<  ;
 	cout << "      稱號: " << / << endl << endl ; */
@@ -332,7 +336,7 @@ void situation_main( char* name_out)// 自我狀況清單函式
 
 
 
-void bag_main()// 背包函式
+int bag_main( int B1 , int B2 , int B3 , int B4 , int B5 , int B6 , int B7 , int B8 , int B9 )// 背包函式
 {
 	int take;
 	bool validInput_bag ;
@@ -341,7 +345,126 @@ void bag_main()// 背包函式
 	
 	for(int z=1; z<=9 ; z++ ) //繪製包包 
 	{
-		cout << " 空" ; 
+		switch(z) // 判斷玩家按鍵輸入的結果 
+		{ 
+			case 1 : // 第 1 格 
+			{ 
+				if(B1 != 0)
+				{
+					cout << " x" ;
+				}
+				else
+				{
+					cout << " 空" ; 
+				}
+				break ;
+			}  
+			
+			case 2 : // 第 2 格 
+			{ 
+				if(B2 != 0)
+				{
+					cout << " x" ;
+				}
+				else
+				{
+					cout << " 空" ; 
+				}
+				break ;
+			}  
+			
+			case 3 : // 第 3 格 
+			{ 
+				if(B3 != 0)
+				{
+					cout << " x" ;
+				}
+				else
+				{
+					cout << " 空" ; 
+				}
+				break ;
+			}  
+			
+			case 4 : // 第 4 格 
+			{ 
+				if(B4 != 0)
+				{
+					cout << " x" ;
+				}
+				else
+				{
+					cout << " 空" ; 
+				}
+				break ;
+			}  
+			
+			case 5 : // 第 5 格 
+			{ 
+				if(B5 != 0)
+				{
+					cout << " x" ;
+				}
+				else
+				{
+					cout << " 空" ; 
+				}
+				break ;
+			}  
+			
+			case 6 : // 第 6 格 
+			{ 
+				if(B6 != 0)
+				{
+					cout << " x" ;
+				}
+				else
+				{
+					cout << " 空" ; 
+				}
+				break ;
+			}  
+			
+			case 7 : // 第 7 格 
+			{ 
+				if(B7 != 0)
+				{
+					cout << " x" ;
+				}
+				else
+				{
+					cout << " 空" ; 
+				}
+				break ;
+			}  
+			
+			case 8 : // 第 8 格 
+			{ 
+				if(B8 != 0)
+				{
+					cout << " x" ;
+				}
+				else
+				{
+					cout << " 空" ; 
+				}
+				break ;
+			} 
+			
+			case 9 : // 第 9 格 
+			{ 
+				if( B9 != 0 )
+				{
+					
+				}
+				else
+				{
+					cout << " 空" ; 
+				}
+				break ;
+			} 
+		}
+			
 	} 
 
 	cout << endl << " 1  2  3  4  5  6  7  8  9" << endl ; // 顯示 包包格編號 
@@ -582,7 +705,7 @@ R2 D_run(int run_x , int run_y , int task_yes )
 	{
 		run_x-- ;
 		output.A = npc_aka( run_x , run_y , task_yes );
-	}
+	}                             
 	cout << endl << endl ;
 	output.B = run_x  ;
 	return output ;
@@ -722,8 +845,8 @@ int task_npc_aka_mussel( int B1 , int B2 , int B3 , int B4 , int B5 , int B6 , i
 		B9='蚌' ;
 		return B9 ;
 	}
-	cout << B1 << endl ;
 }
+
 
 
 
