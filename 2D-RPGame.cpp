@@ -21,7 +21,7 @@ typedef struct R2
 void map_main( int run_x , int run_y );// 地圖函式 
 int bag_main( int B1 , int B2 , int B3 , int B4 , int B5 , int B6 , int B7 , int B8 , int B9 );// 背包函式
 void help_main(  );// 操作提示清單函式
-void situation_main( char* name_out , int blood );// 自我狀況清單函式
+void situation_main( string name , int blood );// 自我狀況清單函式
 
 R2 W_run( int run_x , int run_y , int task_yes);// 向上走函式
 R2 S_run( int run_x , int run_y , int task_yes);// 向下走函式
@@ -46,10 +46,8 @@ int main()// 開始 執行程式
 	
 	R2 x;
 	
-	char name[55] ;
-	
-	char* name_out ;
-	
+	string name ;
+
 	
 	int blood = 100 ;
 	
@@ -74,8 +72,7 @@ int main()// 開始 執行程式
 	cout << "      W A S D 控制方向  |  E 開背包 " << endl << "      Esc 結束遊戲  |  ? 操作提示" << endl << endl;
 	
 	cout << "請輸入你的角色名字" << endl << endl ;
-	gets(name);
-	name_out = name;
+	cin >> name ;
 	
 	cout << " Enter 開始遊戲" << endl ;
 	
@@ -212,7 +209,7 @@ int main()// 開始 執行程式
 				system("cls");
 				cout << endl ;
 				cout << "                                        開起 自我狀況清單" << endl ; 
-				situation_main( name_out , blood );	//運行 自我狀況清單函式 
+				situation_main( name , blood );	//運行 自我狀況清單函式 
 				map_main( run_x , run_y );//運行 地圖函式
 				break ;
 			} 
@@ -311,10 +308,10 @@ void help_main()// 操作提示清單函式
 
 
 
-void situation_main( char* name_out , int blood )// 自我狀況清單函式
+void situation_main( string name , int blood )// 自我狀況清單函式
 {
 	cout << "      角色狀況: " << endl << endl ;
-	cout << "      角色名稱: " << name_out << endl ;
+	cout << "      角色名稱: " << name << endl ;
 	cout << "      角色血量: " << blood << endl ;
 	/*cout << "      手部: " <<  << "      裝備: " << / << endl ;
 	cout << "      金錢: " <<  ;
@@ -803,7 +800,7 @@ int task_npc_aka_mussel( int B1 , int B2 , int B3 , int B4 , int B5 , int B6 , i
 	if( B1==0 )
 	{
 		B1='蚌' ;
-		return B1 ;
+		return B1;
 	}
 	else if( B2==0 )
 	{
