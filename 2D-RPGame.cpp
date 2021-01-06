@@ -9,9 +9,18 @@
 #include <string.h>
 #include <locale>
 
+
 // 簡化程式碼 
 
 using namespace std;
+
+//////////////////////////////////////////////////////////////////////外部變數 
+int run_x=6 , run_y=6 ;
+const int bag_Width=9 ,bag_Height=3;//包包大小 寬/高 
+
+int money=200; // 金錢 
+int blood = 100 ; // 血量 
+string bag[bag_Width][bag_Height] = {} ; // 背包 
 
 /*
 typedef struct R2
@@ -34,20 +43,19 @@ void A_run();// 向左走函式
 void D_run();// 向右走函式
 
 /////////////////////////////////////////////////////////// npc函式
-int npc_aka( );
-int npc_businessman(  );
-int npc_farmer(  );
-int npc_well(  );
+int npc_aka();// 台北爆徒 對話 
+int npc_businessman();// 商人 對話 
+int npc_farmer();
+int npc_well();
+
+int buy_1_main();// 商人 交易界面函式
+int take_buy_main();// 拿交易函式
+void buy_1_item(string buy_1[][bag_Height] ,int take_Width,int take_Height);
+bool yes_buy();// 買不買 
 
 /////////////////////////////////////////////////////////// 任務函式
-int task_npc_aka_mussel();
-
-//////////////////////////////////////////////////////////////////////外部變數 
-int run_x=6 , run_y=6 ;
-const int bag_Width=9 ,bag_Height=3;//包包大小 寬/高 
-
-int blood = 100 ; // 血量 
-string bag[bag_Width][bag_Height] = {} ; // 背包 
+void task_npc_aka_mussel();
+void task_npc_businessman_Lottery_ticket();
 
 //////////////////////////////////////////////////////////////////////主遊戲函式 
 
@@ -277,11 +285,11 @@ void help_main()// 操作提示清單函式
 
 void situation_main( string name , int blood )// 自我狀況清單函式
 {
-	cout << "      角色狀況: " << endl << endl ;
-	cout << "      角色名稱: " << name << endl ;
+	cout << "      角色狀況: " << endl  << endl ;
+	cout << "      角色名稱: " << name  << endl ;
 	cout << "      角色血量: " << blood << endl ;
+	cout << "      金錢:     " << money << endl ;
 	/*cout << "      手部: " <<  << "      裝備: " << / << endl ;
-	cout << "      金錢: " <<  ;
 	cout << "      稱號: " << / << endl << endl ; */
 	
 	cout << "      Esc 關閉清單" << endl ;
@@ -468,6 +476,32 @@ void item_main(int take_Width,int take_Height)//物品詳情函式
 		cout << "但是其虹管可長達一米，形似象鼻，" << endl ;
 		cout << "又大又多肉，因此被稱為「象拔蚌」。" << endl ;
 		cout << "中文學名 : 太平洋潛泥蛤。" << endl ;
+	}
+	if(bag[take_Width][take_Height]=="獎")
+	{
+		cout << "\"大樂透\"" << endl ; 
+		cout << "中華民國公益彩券，類型之一。" << endl ;
+		cout << "大樂透為2004年發行的彩券，為49選6。" << endl ;
+		cout << "開6個號碼加1個特別號。" << endl ;
+		cout << "每周二、五開獎，每注售價為新臺幣50元。" << endl ;
+		cout << "過年會特別加開\"春節大紅包\"。" << endl << endl ;
+		cout << "商人唱的那首歌是 " << endl ;
+		cout << "婁峻碩SHOU - 恭嘻發彩 (台灣彩券過年主題曲）。" << endl ;
+	}
+	if(bag[take_Width][take_Height]=="刀")
+	{
+		cout << "\"刀子\"" << endl ; 
+    	cout<<"非常鋒利的刀子"<<endl; 
+    	cout<<"無論是務農還是防身都很合適"<<endl; 
+    	cout<<"價值 : 150"<<endl;
+	}
+	if(bag[take_Width][take_Height]=="果")
+	{
+		cout << "\"水果\"" << endl ; 
+		cout<<"現摘的新鮮水果"<<endl; 
+    	cout<<"多汁香甜，應該可以補充不少體力"<<endl;
+		cout<<"效果 : +20血量"<<endl; 
+    	cout<<"價值 : 50"<<endl; 
 	}	
 	cout << endl << "                                        按任一鍵離開" << endl ;
 	
@@ -502,7 +536,7 @@ void W_run()
 	if( run_x == 8 && run_y == 6 ) //遇到 商人
 	{
 		run_y++ ;
-		cout << "商人 : 來看看新貨 " ;
+		npc_businessman();
 	}
 	if( run_x == 3 && run_y == 9 ) //遇到 水井
 	{
@@ -539,7 +573,7 @@ void S_run()
 	if( run_x == 8 && run_y == 6 ) //遇到 商人
 	{
 		run_y-- ;
-		cout << "商人 : 來看看新貨 " << endl ;
+		npc_businessman();
 	}
 	if( run_x == 3 && run_y == 9 ) //遇到 水井
 	{
@@ -576,7 +610,7 @@ void A_run()
 	if( run_x == 8 && run_y == 6 ) //遇到 商人
 	{
 		run_x++ ;
-		cout << "商人 : 來看看新貨 " << endl ;
+		npc_businessman();
 	}
 	if( run_x == 3 && run_y == 9 ) //遇到 水井
 	{
@@ -613,7 +647,7 @@ void D_run()
 	if( run_x == 8 && run_y == 6 ) //遇到 商人 
 	{
 		run_x-- ;
-		cout << "商人 : 來看看新貨 " << endl ;
+		npc_businessman();
 	}
 	if( run_x == 3 && run_y == 9 ) //遇到 水井 
 	{
@@ -630,9 +664,287 @@ void D_run()
 			
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 包包欄 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 交易介面 
 
+int buy_1_main()// 商人 交易界面函式
+{
+	string buy_1[bag_Width][bag_Height] = {{"刀"},{"果"},{}} ;
+	int Width,Height;//印包包
+	int take_Height,take_Width;//拿包包
+	bool validInput_bag ;//是否關包包 
+	
+	cout << "                      買東西" << endl << endl ;
+	
+	for(int Height=0; Height<bag_Height ; Height++ ) //交易界面函式 
+	{
+		cout<<" "<<Height+1<<"  ";
+		for(int Width=0; Width<bag_Width ; Width++ )
+		{
+			if(buy_1[Width][Height]=="")
+			{
+				cout<<"空 "; //交易內容為空 
+			}
+			else
+			{
+				cout<<buy_1[Width][Height] <<" "; //印交易內容 
+			}
+		}
+		cout<<endl;
+	} 
 
+	cout << endl << "     1  2  3  4  5  6  7  8  9" << endl ; // 顯示 交易格編號 
+	
+	cout << "                                        輸入編號拿取物品 E 關閉交易" << endl ;
+	cout << "                                             選擇 排" << endl ;
+	
+	validInput_bag = true ; //預設開交易 
+	
+	while(validInput_bag)  // 判斷 交易操作 是否要結束
+	{
+		
+		take_Height = 0 ;
+		while (1)// 讀取玩家按鍵 // 控制 交易 操作
+		{
+            take_Height = getch();// 讀取玩家按鍵 
+            if (take_Height != 0)
+			{
+				break; 
+			}
+    	}// 讀取玩家按鍵  
+    	
+		switch(take_Height) // 判斷玩家按鍵輸入的結果 
+		{ 
+			case 49 : 
+				cout << "                                        第1排" << endl ;
+				take_Height = 0;
+				take_Width = take_buy_main();
+				buy_1_item(buy_1,take_Width,take_Height);
+				validInput_bag = false ;
+				break ;
+				 
+			case 50 : 
+				cout << "                                        第2排" << endl ; 
+				take_Height = 1;
+				take_Width = take_buy_main();
+				buy_1_item(buy_1,take_Width,take_Height);
+				validInput_bag = false ;
+				break ;
+			
+			case 51 : 
+				cout << "                                        第3排" << endl ; 
+				take_Height = 2;
+				take_Width = take_buy_main();
+				buy_1_item(buy_1,take_Width,take_Height);
+				validInput_bag = false ;
+				break ;
+				
+			case 101 : 
+				cout << endl << "                                        關閉交易" << endl ; 
+				validInput_bag = false ;
+				break ;
+			
+			default:
+				break ;
+		} 
+	}
+	if(take_Width!=0) //開啟物品介紹 
+	{
+	}
+	
+	_sleep(750); // 停留0.75秒 
+	system("cls"); // 清屏 
+	cout << endl << endl ;
+}
+
+int take_buy_main()//拿取第X格 函式 
+{
+	int take_Width;
+	
+	cout << "                                             選擇 格" << endl ;
+	
+	while (1)// 讀取玩家按鍵 // 控制 交易 操作
+		{
+            take_Width = getch();// 讀取玩家按鍵 
+            if (take_Width != 0)
+			{
+				break; 
+			}
+    	}// 讀取玩家按鍵
+    	
+    switch (take_Width)
+    {
+    	case 49 : 
+			cout << "                                        第1格" << endl ;
+			return 0;
+				 
+		case 50 : 
+			cout << "                                        第2格" << endl ; 
+			return 1;
+		
+		case 51 : 
+			cout << "                                        第3格" << endl ; 
+			return 2;
+			
+		case 52 : 
+			cout << "                                        第4格" << endl ;
+			return 3;
+				 
+		case 53 : 
+			cout << "                                        第5格" << endl ; 
+			return 4;
+		
+		case 54 : 
+			cout << "                                        第6格" << endl ; 
+			return 5;
+			
+		case 55 : 
+			cout << "                                        第7格" << endl ;
+			return 6;
+				 
+		case 56 : 
+			cout << "                                        第8格" << endl ; 
+			return 7;
+		
+		case 57 : 
+			cout << "                                        第9格" << endl ; 
+			return 8;
+			
+		case 101 : 
+			cout << endl << "                                        關閉交易" << endl ;
+			return 0;
+		
+		default:
+			break ;
+	}
+}
+
+void buy_1_item(string buy_1[][bag_Height] ,int take_Width,int take_Height)//物品詳情函式
+{
+	bool Esc=0;
+    if(buy_1[take_Width][take_Height]=="刀")
+    {
+    	cout<<"\"刀子\""<<endl; 
+    	cout<<"非常鋒利的刀子"<<endl; 
+    	cout<<"無論是務農還是防身都很合適"<<endl; 
+    	cout<<"售價 : 150"<<endl; 
+    	bool yes = yes_buy();
+    	while(yes)
+    	{
+	    	if(money-150>=0)
+	    	{
+				for(int Height=0; Height<bag_Height ; Height++ ) //繪製包包 
+				{
+					for(int Width=0; Width<bag_Width ; Width++ )
+					{
+						if(bag[Width][Height]=="")
+						{
+							bag[Width][Height]="刀";//包包內容為空 可以放 
+							Esc=1;
+							money-=150;
+							break;
+						}
+					}
+					if(Esc)
+					{
+						break;
+					}
+				} 
+			}
+			else
+			{
+				cout << endl << "                                        你的金錢不足" << endl ;
+				return;
+			}
+			if(Esc)
+			{
+				break;
+			}
+		}
+		cout << endl << "                                        交易結束" << endl ;
+	}
+	
+	if(buy_1[take_Width][take_Height]=="果")
+    {
+    	cout<<"\"水果\""<<endl; 
+    	cout<<"現摘的新鮮水果"<<endl; 
+    	cout<<"多汁香甜，應該可以補充不少體力"<<endl;
+		cout<<"效果 : +20血量"<<endl; 
+    	cout<<"售價 : 50"<<endl; 
+    	bool yes = yes_buy();
+    	while(yes)
+    	{
+	    	if(money-50>=0)
+	    	{
+				for(int Height=0; Height<bag_Height ; Height++ ) //繪製包包 
+				{
+					for(int Width=0; Width<bag_Width ; Width++ )
+					{
+						if(bag[Width][Height]=="")
+						{
+							bag[Width][Height]="果";//包包內容為空 可以放 
+							Esc=1;
+							money-=50;
+							break;
+						}
+					}
+					if(Esc)
+					{
+						break;
+					}
+				} 
+			}
+			else
+			{
+				cout << endl << "                                        你的金錢不足" << endl ;
+				return;
+			}
+			if(Esc)
+			{
+				break;
+			}
+		}
+		cout << endl << "                                        交易結束" << endl ;
+	}	
+	cout << endl << "                                        按任一鍵離開" << endl ;
+	
+	while (1)// 讀取玩家按鍵 // 控制 包包 操作
+	{
+        int take_Width = getch();// 讀取玩家按鍵 
+    	if (take_Width != 0)
+		{
+			break; 
+		}
+    }
+}
+
+bool yes_buy()
+{
+	int take_Width;
+	cout << endl << "                                        是否購買 Y / N" << endl ;
+	while (1)// 讀取玩家按鍵 // 控制 包包 操作
+	{
+        take_Width = getch();// 讀取玩家按鍵 
+    	if (take_Width != 0)
+		{
+			break; 
+		}
+    }
+    switch (take_Width)
+    {
+    	case 110 : 
+			cout << "                                        NO" << endl ;
+			return 0;
+			break;
+				 
+		case 121 : 
+			cout << "                                        YES" << endl ; 
+			return 1;
+			break;
+		
+		default:
+			break ;
+	}
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// npc函式 
 
@@ -649,7 +961,7 @@ int npc_aka() // 暴徒npc函式
 		talk = 0 ;
 		while (1)
 		{
-			cout << "台北爆徒 : 浪漫Duke" << endl << endl ;
+			cout << "台北爆徒 : 浪漫Duke。" << endl << endl ;
 			cout << " 1. 沒帶記憶卡 不早說。" << endl ; 
 			cout << " 2. 抽煙?。" << endl ;
 			cout << " 3. 懂海 海就會幫你。" << endl ;
@@ -703,8 +1015,55 @@ int npc_aka() // 暴徒npc函式
 
 int npc_businessman(  ) // 商人npc 函式
 {
+	int talk ;
+	static bool aka_Ok=true;
 	
-}
+	bool validInput_npc_aka = true ;
+	
+	while(validInput_npc_aka)
+	{
+		talk = 0 ;
+		while (1)
+		{
+			cout << "商人 : 來看看新貨。" << endl ;
+			cout << " 1. 買東西。" << endl ; 
+			cout << " 2. 大樂透。" << endl ;
+				
+            talk = getch();// 讀取玩家按鍵 
+            if (talk != 0)
+			{
+				system("cls") ;
+				break; 
+			}
+    	}
+    	
+		switch(talk) // 判斷玩家按鍵輸入的結果 
+		{ 
+			case 49 : 
+				buy_1_main();
+				validInput_npc_aka = false ;
+				break ;
+				 
+			case 50 : 
+				cout << "玩家 : 大樂透。 " << endl << endl ; 
+				cout << "商人 : 恭喜 ! 恭喜 ! 恭喜 ! 恭喜你 ! " << endl ;
+				cout << "商人 : 新年新的心情換新衣。" << endl ;
+				cout << "商人 : 過年就是要買大樂透 ! ! ! " << endl ;
+				cout << "商人 : 鴻運當頭 ! 萬事如意 ! " << endl << endl ;
+				cout << "商人 : 恭喜 ! 恭喜 ! 恭喜 ! 恭喜你 ! " << endl ;
+				cout << "商人 : 紅衣紅褲讓我試個手氣。" << endl ;
+				cout << "商人 : 過年就是要買大樂透 ! " << endl ;
+				cout << "商人 : 恭喜你發財 ! " << endl << endl ;
+				cout << "獲得  \"大樂透\"  " << endl ;
+				task_npc_businessman_Lottery_ticket();
+				validInput_npc_aka = false ;
+				break ;
+			
+			default:
+				break ;
+		} 
+	} 
+} // 商人npc 函式
  
 
 
@@ -723,7 +1082,7 @@ int npc_well(  ) // 水井物件 函式
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 任務函式 
 
-int task_npc_aka_mussel() // 偵測 aka_象蚌要放那 
+void task_npc_aka_mussel() // 偵測 aka_象蚌要放那 
 {
 	bool Esc=0;
 	for(int Height=0; Height<bag_Height ; Height++ ) //繪製包包 
@@ -744,6 +1103,26 @@ int task_npc_aka_mussel() // 偵測 aka_象蚌要放那
 	} 
 }
 
+void task_npc_businessman_Lottery_ticket()
+{
+	bool Esc=0;
+	for(int Height=0; Height<bag_Height ; Height++ ) //繪製包包 
+	{
+		for(int Width=0; Width<bag_Width ; Width++ )
+		{
+			if(bag[Width][Height]=="")
+			{
+				bag[Width][Height]="獎";//包包內容為空 可以放 
+				Esc=1;
+				break;
+			}
+		}
+		if(Esc)
+		{
+			break;
+		}
+	} 
+}
 
 
 
